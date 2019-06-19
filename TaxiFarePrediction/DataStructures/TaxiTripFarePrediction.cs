@@ -6,14 +6,11 @@ using System.Linq;
 
 namespace TaxiFareRegression.DataStructures
 {
-    public class TaxiTripFarePrediction
+    public class TaxiTripFarePredictionWithContribution
     {
         [ColumnName("Score")]
         public float FareAmount;
-    }
 
-    public class TaxiTripFarePredictionWithContribution : TaxiTripFarePrediction
-    {
         public float[] FeatureContributions { get; set; }
 
         public List<FeatureContribution> GetFeatureContributions(DataViewSchema dataview)
@@ -26,8 +23,8 @@ namespace TaxiFareRegression.DataStructures
             for (int i = 0; i < featureNames.Count(); i++)
             {
                 string featureName = featureNames[i].ToString();
-                if (featureName == "PassengerCount" || featureName == "TripTime"|| featureName == "TripDistance")
-                featureList.Add(new FeatureContribution(featureName, FeatureContributions[i]));
+                if (featureName == "PassengerCount" || featureName == "TripTime" || featureName == "TripDistance")
+                    featureList.Add(new FeatureContribution(featureName, FeatureContributions[i]));
             }
 
             return featureList;
@@ -38,6 +35,8 @@ namespace TaxiFareRegression.DataStructures
     public class TaxiFarePrediction : TaxiTripFarePredictionWithContribution
     {
         public List<FeatureContribution> Features { get; set; }
+
+        public TaxiTrip Input { get; set; }
 
         public TaxiFarePrediction(float PredictedFareAmount, List<FeatureContribution> Features)
         {

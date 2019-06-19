@@ -30,11 +30,9 @@ namespace TaxiFareRegression.Interpretability
 
         void PaintChart()
         {
-            PlotModel chart = Chart.GetPlotModel(predictions[_predictionIndex]);
-            lblTripID.Text = (_predictionIndex + 1).ToString();
-            string predictedAmount = String.Format("{0:C}", Convert.ToDecimal(predictions[_predictionIndex].FareAmount));
-            lblFare.Text = predictedAmount;
-            this.plot1.Model = chart;
+            this.plot1.Model = Chart.GetPlotModel(predictions[_predictionIndex]);
+            this.lblTripID.Text = (_predictionIndex + 1).ToString();
+            this.lblFare.Text = string.Format("{0:C}", Convert.ToDecimal(predictions[_predictionIndex].FareAmount));
             this.distance.Text = string.Format("{0}", Convert.ToDecimal(predictions[_predictionIndex].Input.TripDistance));
             this.tripTime.Text = string.Format("{0}", new TimeSpan(0, 0, (int)predictions[_predictionIndex].Input.TripTime));
             this.passengerCount.Text = ((int)predictions[_predictionIndex].Input.PassengerCount).ToString();

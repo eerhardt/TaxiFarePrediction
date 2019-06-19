@@ -72,10 +72,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleHelper.cs" />
-    <Compile Include="Data\TaxiTrip.cs" />
-    <Compile Include="Data\TaxiTripFarePrediction.cs" />
-    <Compile Include="Data\TestTaxiTrips.cs" />
+    <Compile Include="..\TaxiFarePrediction\DataStructures\TaxiTrip.cs">
+      <Link>Data\TaxiTrip.cs</Link>
+    </Compile>
+    <Compile Include="..\TaxiFarePrediction\DataStructures\TaxiTripFarePrediction.cs">
+      <Link>Data\TaxiTripFarePrediction.cs</Link>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

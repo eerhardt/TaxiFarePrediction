@@ -2,6 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using TaxiFareRegression.Interpretability;
 
 namespace TaxiFareRegression
 {

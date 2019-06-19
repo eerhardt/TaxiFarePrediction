@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\TaxiFarePrediction.Interpretability\Predictor.cs" Link="Predictor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TaxiFarePrediction\TaxiFarePrediction.csproj" />
   </ItemGroup>
 

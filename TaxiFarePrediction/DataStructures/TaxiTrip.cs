@@ -4,12 +4,7 @@ using System;
 
 namespace TaxiFareRegression.DataStructures
 {
-    public interface IModelEntity
-    {
-        void PrintToConsole();
-    }
-
-    public class TaxiTrip: IModelEntity
+    public class TaxiTrip
     {
         [LoadColumn(0)]
         public string VendorId;
@@ -37,6 +32,4 @@ namespace TaxiFareRegression.DataStructures
             Console.WriteLine($"Features: [VendorID] {VendorId} [RateCode] {RateCode} [PassengerCount] {PassengerCount} [TripTime] {TripTime} TripDistance: {TripDistance} PaymentType: {PaymentType}");
         }
     }
-    
-
 }
