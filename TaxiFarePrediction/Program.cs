@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Common;
+using Microsoft.ML;
+using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
+using PLplot;
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Common;
-using Microsoft.ML;
-using Microsoft.ML.Data;
-using PLplot;
 using TaxiFareRegression.DataStructures;
 
 namespace TaxiFareRegression
@@ -32,14 +34,11 @@ namespace TaxiFareRegression
             TrainModel(mlContext);
 
             // Make a single test prediction loding the model from .ZIP file
-            TestSinglePrediction(mlContext);
+            //TestSinglePrediction(mlContext);
 
 
             // Paint regression distribution chart for a number of elements read from a Test DataSet file
-            PlotRegressionChart(mlContext, TestDataPath, 100, args);
-
-            Console.WriteLine("Press any key to exit..");
-            Console.ReadLine();
+            //PlotRegressionChart(mlContext, TestDataPath, 100, args);
         }
 
         private static ITransformer TrainModel(MLContext mlContext)
@@ -93,11 +92,15 @@ namespace TaxiFareRegression
 
             Common.ConsoleHelper.PrintRegressionMetrics(trainer.ToString(), metrics);
 
-            // STEP 6: Save/persist the trained model to a .ZIP file
+            // STEP 6: Explain the model with Permutation Feature Importance (PFI)
+            Console.WriteLine("===== Calculating Permutation Feature Importance =====");
+            ShowPermutationFeatureImportance(mlContext, trainedModel.LastTransformer, predictions);
+
+            // STEP 7: Save/persist the trained model to a .ZIP file
             mlContext.Model.Save(fccPipeline, trainingDataView.Schema, ModelPath);
 
             Console.WriteLine("The model is saved to {0}", ModelPath);
-            
+
             return fccPipeline;
         }
 
@@ -225,12 +228,12 @@ namespace TaxiFareRegression
                     double xSquare = x[0] * x[0];
                     xSquareTotal += xSquare;
 
-                    double ySquare = y[0] * y[0];
+                    //double ySquare = y[0] * y[0];
 
-                    Console.WriteLine($"-------------------------------------------------");
-                    Console.WriteLine($"Predicted : {FarePrediction.FareAmount}");
-                    Console.WriteLine($"Actual:    {testData[i].FareAmount}");
-                    Console.WriteLine($"-------------------------------------------------");
+                    //Console.WriteLine($"-------------------------------------------------");
+                    //Console.WriteLine($"Predicted : {FarePrediction.FareAmount}");
+                    //Console.WriteLine($"Actual:    {testData[i].FareAmount}");
+                    //Console.WriteLine($"-------------------------------------------------");
                 }
 
                 // Regression Line calculation explanation:
@@ -285,6 +288,38 @@ namespace TaxiFareRegression
                 UseShellExecute = true
             };
             p.Start();
+        }
+
+        private static void ShowPermutationFeatureImportance(
+            MLContext mlContext,
+            RegressionPredictionTransformer<LinearRegressionModelParameters> trainedModel,
+            IDataView scoredData)
+        {
+            ImmutableArray<RegressionMetricsStatistics> permutationFeatureImportance =
+                mlContext
+                    .Regression
+                    .PermutationFeatureImportance(trainedModel, scoredData, permutationCount: 3);
+
+            VBuffer<ReadOnlyMemory<char>> featureNamesBuffer = default;
+            scoredData.Schema["Features"].GetSlotNames(ref featureNamesBuffer);
+            ReadOnlyMemory<char>[] featureNameValues = featureNamesBuffer.DenseValues().ToArray();
+
+            var featureImportanceMetrics =
+                permutationFeatureImportance
+                    .Select((metric, index) => new {
+                        name = featureNameValues[index].ToString(),
+                        metric.RSquared,
+                        metric.RootMeanSquaredError,
+                        metric.LossFunction,
+                    })
+                    .OrderByDescending(myFeatures => Math.Abs(myFeatures.RSquared.Mean));
+
+            Console.WriteLine($"{"Feature",-25}\tRSquared\tRootMeanSquaredError");
+
+            foreach (var feature in featureImportanceMetrics)
+            {
+                Console.WriteLine($"{feature.name,-25}|\t{feature.RSquared.Mean:F6}\t{feature.RootMeanSquaredError.Mean:F6}");
+            }
         }
 
         public static string GetAbsolutePath(string relativePath)
