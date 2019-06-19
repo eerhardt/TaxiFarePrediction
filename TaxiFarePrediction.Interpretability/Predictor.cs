@@ -51,6 +51,7 @@ namespace TaxiFareRegression.Interpretability
                                         testData.PrintToConsole();
                                         prediction = predictionEngine.Predict(testData);
                                         explainedPrediction = new DataStructures.TaxiFarePrediction(prediction.FareAmount, prediction.GetFeatureContributions(model.GetOutputSchema(inputDataForPredictions.Schema)));
+                                        explainedPrediction.Input = testData;
                                         transactionList.Add(explainedPrediction);
                                     });
 

@@ -16,4 +16,9 @@
     <Folder Include="outputs\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\inputs\taxi-fare-test.csv" Link="inputs/taxi-fare-test.csv" />
+    <None Include="..\inputs\taxi-fare-train.csv" Link="inputs/taxi-fare-train.csv" />
+  </ItemGroup>
+
 </Project>

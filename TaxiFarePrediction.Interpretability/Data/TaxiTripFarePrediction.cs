@@ -39,6 +39,8 @@ namespace TaxiFareRegression.DataStructures
     {
         public List<FeatureContribution> Features { get; set; }
 
+        public TaxiTrip Input { get; set; }
+
         public TaxiFarePrediction(float PredictedFareAmount, List<FeatureContribution> Features)
         {
             this.FareAmount = PredictedFareAmount;

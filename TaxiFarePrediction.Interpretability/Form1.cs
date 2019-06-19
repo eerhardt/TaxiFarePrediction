@@ -20,7 +20,7 @@ namespace TaxiFareRegression.Interpretability
         int _predictionIndex = 0;
         
         static List<DataStructures.TaxiFarePrediction> predictions = GetTaxiFare.Predictions();
-        int _resultCount= predictions.Count()-1;
+        int _resultCount= predictions.Count();
 
         public Form1()
         {
@@ -35,6 +35,9 @@ namespace TaxiFareRegression.Interpretability
             string predictedAmount = String.Format("{0:C}", Convert.ToDecimal(predictions[_predictionIndex].FareAmount));
             lblFare.Text = predictedAmount;
             this.plot1.Model = chart;
+            this.distance.Text = string.Format("{0}", Convert.ToDecimal(predictions[_predictionIndex].Input.TripDistance));
+            this.tripTime.Text = string.Format("{0}", new TimeSpan(0, 0, (int)predictions[_predictionIndex].Input.TripTime));
+            this.passengerCount.Text = ((int)predictions[_predictionIndex].Input.PassengerCount).ToString();
         }
 
         internal static class Chart
@@ -104,7 +107,7 @@ namespace TaxiFareRegression.Interpretability
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            if (_predictionIndex < _resultCount)
+            if (_predictionIndex < _resultCount - 1)
             {
                 _predictionIndex++;
                 PaintChart();
