@@ -14,7 +14,7 @@ namespace TaxiFareRegression
 {
     internal static class Program
     {
-        private static string BaseRelativePath = @"../../../../";
+        private static string BaseRelativePath = @"../../../";
         private static string BaseDataPath = Path.Combine(Path.GetFullPath(BaseRelativePath), "inputs");
 
         private static string TrainDataPath = Path.Combine(BaseDataPath, "taxi-fare-train.csv");

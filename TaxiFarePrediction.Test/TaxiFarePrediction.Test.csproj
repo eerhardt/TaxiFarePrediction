@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TaxiFarePrediction\TaxiFarePredictionConsoleApp\TaxiFarePrediction.csproj" />
+    <ProjectReference Include="..\TaxiFarePrediction\TaxiFarePrediction.csproj" />
   </ItemGroup>
 
 </Project>
